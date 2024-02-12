@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Empty gauge background -->
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#CCCCCC" /> <!-- Background color -->
+        </shape>
+    </item>
+
+    <!-- Filled gauge progress -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <layer-list>
+                <item android:id="@+id/gaugeFill">
+                    <shape android:shape="rectangle">
+                        <solid android:color="#FF0000" /> <!-- Fill color -->
+                    </shape>
+                </item>
+            </layer-list>
+        </clip>
+    </item>
+</layer-list>

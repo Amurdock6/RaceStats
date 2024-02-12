@@ -1,0 +1,254 @@
+<!-- res/layout/digital_dash.xml -->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:orientation="vertical"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/hamburgerButtonWraper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="end">
+
+        <!-- back button -->
+        <ImageButton
+            android:id="@+id/backArrow"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:layout_marginEnd="874dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:baselineAlignBottom="false"
+            android:src="@drawable/home_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageButton
+            android:id="@+id/hamburgerButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="24dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:baselineAlignBottom="false"
+            android:src="@drawable/home_icon"
+            tools:ignore="SpeakableTextPresentCheck" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/horizontalBarContanier"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/hamburgerButtonWraper"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="75dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/coolantTemp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/coolantLogo"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/coolant_logo_white" />
+
+            <com.example.racestats.CustomProgressBar
+                android:id="@+id/coolantTemperatureGauge"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="780dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="24dp"
+                android:layout_toEndOf="@id/coolantLogo"
+                android:max="126"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/coolantTemperatureTextOverlay"
+                android:layout_width="106dp"
+                android:layout_height="46dp"
+                android:layout_alignTop="@id/coolantTemperatureGauge"
+                android:layout_alignBottom="@id/coolantTemperatureGauge"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="0dp"
+                android:layout_toEndOf="@id/coolantTemperatureGauge"
+                android:gravity="center"
+                android:text="0°C"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="34sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/IntakeTemp"
+            android:layout_width="match_parent"
+            android:layout_height="103dp"
+            android:layout_marginTop="48dp"
+            android:gravity="center"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/intakeLogo"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/airintake" />
+
+            <com.example.racestats.CustomProgressBar
+                android:id="@+id/intakeTemperatureGauge"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="780dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="32dp"
+                android:layout_toEndOf="@id/intakeLogo"
+                android:max="80"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/intakeTemperatureTextOverlay"
+                android:layout_width="106dp"
+                android:layout_height="46dp"
+                android:layout_alignTop="@id/intakeTemperatureGauge"
+                android:layout_alignBottom="@id/intakeTemperatureGauge"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="-4dp"
+                android:layout_toEndOf="@id/intakeTemperatureGauge"
+                android:gravity="center"
+                android:text="0°C"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="34sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+<!--    <com.example.racestats.DraggableGaugeView-->
+<!--        android:id="@+id/rpmGauge"-->
+<!--        android:layout_width="350dp"-->
+<!--        android:layout_height="63dp"-->
+<!--        android:text="Engine RPM: "-->
+<!--        android:textSize="18sp"-->
+<!--        android:visibility="gone" />-->
+
+<!--    <com.example.racestats.DraggableGaugeView-->
+<!--        android:id="@+id/coolantTempGauge"-->
+<!--        android:layout_width="350dp"-->
+<!--        android:layout_height="63dp"-->
+<!--        android:text="Coolant Temperature C°: "-->
+<!--        android:textSize="18sp"-->
+<!--        android:visibility="gone" />-->
+
+
+    <!-- Add TextView to display coolantTemperature -->
+
+    <LinearLayout
+        android:id="@+id/simpleTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/box_shadow_gradient"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:visibility="gone"> <!-- Adjust padding as needed -->
+
+        <ImageView
+            android:id="@+id/coolantLogoSimple"
+            android:layout_width="117dp"
+            android:layout_height="84dp"
+            android:src="@drawable/coolant_logo_white" />
+
+        <TextView
+            android:id="@+id/textTempSimple"
+            android:layout_width="120dp"
+            android:layout_height="55dp"
+            android:gravity="center"
+            android:text="0°C"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/popoutMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/black"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- x button to close pop out -->
+        <ImageButton
+            android:id="@+id/x_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:baselineAlignBottom="false"
+            android:src="@drawable/ic_x_icon"
+            android:visibility="gone"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <!-- Gauge options in pop-out menu -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="16dp"
+            android:text="Availabe Data"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/gaugeOptionCoolant"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:onClick="onGaugeOptionClick"
+            android:padding="16dp"
+            android:text="Coolant Temperature - Active"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/gaugeOptionIntakeTemp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gaugeOptionCoolant"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_horizontal"
+            android:onClick="onGaugeOptionClick"
+            android:padding="16dp"
+            android:text="Intake Temp - Active"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <!-- Add more gauge options as needed -->
+    </LinearLayout>
+</RelativeLayout>

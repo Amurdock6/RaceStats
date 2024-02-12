@@ -3,22 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".TopSpeed">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/cpuTemp"
-        android:layout_width="139dp"
-        android:layout_height="23dp"
-        android:text="CPU Temp: °00 C"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
+    <Button
+        android:id="@+id/button"
+        android:layout_width="219dp"
+        android:layout_height="86dp"
+        android:text="Run PID Test"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.99"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.012" />
-
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

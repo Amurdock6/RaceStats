@@ -1,0 +1,82 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item android:drawable="@android:color/transparent" />
+
+    <!-- Circle 1 (0.5) -->
+    <item>
+        <shape
+            android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="6dp"
+                android:color="@android:color/darker_gray" />
+            <size
+                android:width="100dp"
+                android:height="100dp" />
+        </shape>
+    </item>
+
+    <!-- Circle 2 (1.0) -->
+    <item android:left="200dp" android:right="200dp" android:top="200dp" android:bottom="200dp">
+        <shape
+            android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="6dp"
+                android:color="@android:color/darker_gray" />
+            <size
+                android:width="300dp"
+                android:height="300dp" />
+        </shape>
+    </item>
+
+    <!-- Circle 3 (1.5) -->
+    <item android:left="400dp" android:right="400dp" android:top="400dp" android:bottom="400dp">
+        <shape
+            android:shape="oval">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="6dp"
+                android:color="@android:color/darker_gray" />
+            <size
+                android:width="400dp"
+                android:height="400dp" />
+        </shape>
+    </item>
+
+
+    <!-- Text 0.5 -->
+    <item
+        android:top="290dp"
+        android:left="90dp"
+        android:right="90dp">
+        <bitmap
+            android:src="@drawable/point5gpng"
+            android:gravity="center"
+            android:tint="@color/white"/>
+    </item>
+
+    <!-- Text 1.0 -->
+    <item
+        android:top="690dp"
+        android:left="180dp"
+        android:right="180dp">
+        <bitmap
+            android:src="@drawable/oneg"
+            android:gravity="center"
+            android:tint="@color/white"/>
+    </item>
+
+    <!-- Text 1.5 -->
+    <item
+        android:top="1090dp"
+        android:left="270dp"
+        android:right="270dp"
+        >
+        <bitmap
+            android:src="@drawable/onepoint5g"
+            android:gravity="center"
+            android:tint="@color/white"/>
+    </item>
+
+</layer-list>

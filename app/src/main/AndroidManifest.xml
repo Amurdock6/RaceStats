@@ -2,8 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACTION_MANAGE_ALL_SIM_PROFILES_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
+
+
     <application
         android:allowBackup="true"
+        android:requestLegacyExternalStorage="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -12,13 +23,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RaceStats"
         tools:targetApi="31">
+
         <activity
-            android:name=".TopSpeed"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:name=".DigitalDash"
+            android:label="Digital Dash Activity">
         </activity>
+
+        <activity
+            android:name=".EcuData"
+            android:label="ECU Data Activity">
+        </activity>
+
+        <activity
+            android:name=".EditRecordView"
+            android:label="Service Record Detail Activity"
+            />
+
+        <activity
+            android:name=".GMeter"
+            android:label="G Meter Activity">
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -32,6 +57,35 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <activity
+            android:name=".ServiceRecords"
+            android:label="Service Records Activity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+
+        <activity
+            android:name=".Settings"
+            android:label="Settings Activity">
+        </activity>
+
+        <activity
+            android:name=".ZeroToSixty"
+            android:label="0-60 Activity">
+        </activity>
+
+        <activity
+            android:name=".BluetoothDeviceFinder"
+            android:label="Bluetooth Device Finder">
+        </activity>
+
+        <receiver android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

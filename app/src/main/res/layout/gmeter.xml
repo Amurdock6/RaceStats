@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/background_circle"
+        android:layout_width="750dp"
+        android:layout_height="550dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/circle_background" />
+
+    <TextView
+        android:id="@+id/BrakingGs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:text="Braking G's"
+        android:layout_marginBottom="25dp"
+        android:layout_above="@id/background_circle"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/gdot"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/gdot" />
+
+    <TextView
+        android:id="@+id/AccelGs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:text="Acceleration G's"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/background_circle"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/LeftGs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:text="Left G's"
+        android:layout_marginRight="-85dp"
+        android:layout_toLeftOf="@id/background_circle"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/RightGs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:text="Right G's"
+        android:layout_marginLeft="-85dp"
+        android:layout_toRightOf="@id/background_circle"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/highScoreTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/AccelGs"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/calibrateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calibrate"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+</RelativeLayout>
