@@ -364,7 +364,7 @@ public class DigitalDash extends AppCompatActivity {
 
             // Iterate through PIDs 0-250 and check availability
             for (int i = 0; i <= 250; i++) {
-                ObdCommand pidCommand = new CustomPIDCommand(i);  // Replace CustomPIDCommand with the appropriate command
+                ObdCommand pidCommand = new CustomPIDCommand(i, "PID name");  // Replace CustomPIDCommand with the appropriate command
                 pidCommand.run(socket.getInputStream(), socket.getOutputStream());
                 if (!pidCommand.getResult().equals("NO DATA")) {
                     availablePIDs[i] = i;
@@ -376,6 +376,8 @@ public class DigitalDash extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -395,7 +397,7 @@ public class DigitalDash extends AppCompatActivity {
 
             // Create a command for the specified PID
             CustomPIDCommand customCommand = new CustomPIDCommand(pidToRetrieve, "Custom Command Name");
-            ObdCommand pidCommand = new CustomPIDCommand(pidToRetrieve);  // Replace CustomPIDCommand with the appropriate command
+            ObdCommand pidCommand = new CustomPIDCommand(pidToRetrieve, "Custom Command Name");  // Replace CustomPIDCommand with the appropriate command
             pidCommand.run(socket.getInputStream(), socket.getOutputStream());
 
             // Parse the result and return the value
@@ -405,6 +407,8 @@ public class DigitalDash extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
             return -1;
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

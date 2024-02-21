@@ -14,8 +14,8 @@ public class CustomPIDCommand extends ObdCommand{
     private String customName;
 
     // Constructor to initialize the command with a custom PID and name
-    public CustomPIDCommand(String pid, String customName) {
-        super(pid);
+    public CustomPIDCommand(int pid, String customName) {
+        super(String.valueOf(pid));
         this.customName = customName;
     }
 
