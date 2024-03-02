@@ -280,6 +280,7 @@ public class DigitalDash extends AppCompatActivity {
                     int result = getPID(pid);
                     // Process the result or perform any necessary actions
                     // (e.g., display result in a toast or update UI)
+                    Log.d("Result of custom pid call: ", String.valueOf(result));
                     Toast.makeText(DigitalDash.this, "Result: " + result, Toast.LENGTH_SHORT).show();
                 } catch (NumberFormatException e) {
                     Toast.makeText(DigitalDash.this, "Invalid PID", Toast.LENGTH_SHORT).show();
@@ -447,6 +448,7 @@ public class DigitalDash extends AppCompatActivity {
 
             // Parse the result and return the value
             String result = pidCommand.getFormattedResult();
+            Log.d("Custom PID result", result);
             return Integer.parseInt(result);
 
         } catch (IOException | InterruptedException e) {

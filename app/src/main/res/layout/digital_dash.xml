@@ -1,44 +1,45 @@
 <!-- res/layout/digital_dash.xml -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:background="@color/black"
     android:orientation="vertical"
-    android:background="@color/black">
+    tools:context=".MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/hamburgerButtonWraper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="end">
+        android:layout_marginTop="40dp">
 
         <!-- back button -->
         <ImageButton
             android:id="@+id/backArrow"
             android:layout_width="60dp"
             android:layout_height="48dp"
-            android:layout_gravity="start"
-            android:layout_marginEnd="874dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="40dp"
             android:background="?android:attr/selectableItemBackground"
             android:baselineAlignBottom="false"
             android:src="@drawable/home_icon"
             tools:ignore="SpeakableTextPresentCheck" />
 
+        <!-- hamburger button -->
         <ImageButton
             android:id="@+id/hamburgerButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="40dp"
             android:background="?android:attr/selectableItemBackground"
             android:baselineAlignBottom="false"
             android:src="@drawable/hamburger"
             tools:ignore="SpeakableTextPresentCheck" />
-    </LinearLayout>
+
+    </RelativeLayout>
+
 
 
     <LinearLayout
@@ -138,111 +139,111 @@
 
         </RelativeLayout>
 
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/afr"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:gravity="center"-->
-<!--            android:padding="16dp">-->
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/afr"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_marginTop="15dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="16dp">-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/afrLogo"-->
-<!--                android:layout_width="55dp"-->
-<!--                android:layout_height="55dp"-->
-<!--                android:layout_alignParentStart="true"-->
-<!--                android:layout_marginStart="12dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:src="@drawable/afr" />-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/afrLogo"-->
+        <!--                android:layout_width="55dp"-->
+        <!--                android:layout_height="55dp"-->
+        <!--                android:layout_alignParentStart="true"-->
+        <!--                android:layout_marginStart="12dp"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:src="@drawable/afr" />-->
 
-<!--            <com.example.racestats.CustomProgressBar-->
-<!--                android:id="@+id/afrGauge"-->
-<!--                style="?android:attr/progressBarStyleHorizontal"-->
-<!--                android:layout_width="780dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_toEndOf="@+id/afrLogo"-->
-<!--                android:max="126"-->
-<!--                android:progress="0" />-->
+        <!--            <com.example.racestats.CustomProgressBar-->
+        <!--                android:id="@+id/afrGauge"-->
+        <!--                style="?android:attr/progressBarStyleHorizontal"-->
+        <!--                android:layout_width="780dp"-->
+        <!--                android:layout_height="40dp"-->
+        <!--                android:layout_marginStart="32dp"-->
+        <!--                android:layout_toEndOf="@+id/afrLogo"-->
+        <!--                android:max="126"-->
+        <!--                android:progress="0" />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/afrTextOverlay"-->
-<!--                android:layout_width="106dp"-->
-<!--                android:layout_height="46dp"-->
-<!--                android:layout_alignTop="@id/afrGauge"-->
-<!--                android:layout_alignBottom="@id/afrGauge"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginBottom="0dp"-->
-<!--                android:layout_toEndOf="@id/afrGauge"-->
-<!--                android:gravity="center"-->
-<!--                android:text="0"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="34sp" />-->
+        <!--            <TextView-->
+        <!--                android:id="@+id/afrTextOverlay"-->
+        <!--                android:layout_width="106dp"-->
+        <!--                android:layout_height="46dp"-->
+        <!--                android:layout_alignTop="@id/afrGauge"-->
+        <!--                android:layout_alignBottom="@id/afrGauge"-->
+        <!--                android:layout_marginStart="20dp"-->
+        <!--                android:layout_marginBottom="0dp"-->
+        <!--                android:layout_toEndOf="@id/afrGauge"-->
+        <!--                android:gravity="center"-->
+        <!--                android:text="0"-->
+        <!--                android:textAlignment="center"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="34sp" />-->
 
-<!--        </RelativeLayout>-->
+        <!--        </RelativeLayout>-->
 
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/fuelTrim"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:gravity="center"-->
-<!--            android:padding="16dp">-->
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/fuelTrim"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="100dp"-->
+        <!--            android:layout_marginTop="15dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="16dp">-->
 
-<!--            <ImageView-->
-<!--                android:id="@+id/fuelTrimLogo"-->
-<!--                android:layout_width="55dp"-->
-<!--                android:layout_height="55dp"-->
-<!--                android:layout_alignParentStart="true"-->
-<!--                android:layout_marginStart="12dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:src="@drawable/fueltrim" />-->
+        <!--            <ImageView-->
+        <!--                android:id="@+id/fuelTrimLogo"-->
+        <!--                android:layout_width="55dp"-->
+        <!--                android:layout_height="55dp"-->
+        <!--                android:layout_alignParentStart="true"-->
+        <!--                android:layout_marginStart="12dp"-->
+        <!--                android:layout_marginEnd="8dp"-->
+        <!--                android:src="@drawable/fueltrim" />-->
 
-<!--            <com.example.racestats.CustomProgressBar-->
-<!--                android:id="@+id/fuelTrimGauge"-->
-<!--                style="?android:attr/progressBarStyleHorizontal"-->
-<!--                android:layout_width="780dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginStart="24dp"-->
-<!--                android:layout_toEndOf="@id/fuelTrimLogo"-->
-<!--                android:max="100"-->
-<!--                android:progress="0" />-->
+        <!--            <com.example.racestats.CustomProgressBar-->
+        <!--                android:id="@+id/fuelTrimGauge"-->
+        <!--                style="?android:attr/progressBarStyleHorizontal"-->
+        <!--                android:layout_width="780dp"-->
+        <!--                android:layout_height="40dp"-->
+        <!--                android:layout_marginStart="24dp"-->
+        <!--                android:layout_toEndOf="@id/fuelTrimLogo"-->
+        <!--                android:max="100"-->
+        <!--                android:progress="0" />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/fuelTrimTextOverlay"-->
-<!--                android:layout_width="106dp"-->
-<!--                android:layout_height="46dp"-->
-<!--                android:layout_alignTop="@id/fuelTrimGauge"-->
-<!--                android:layout_alignBottom="@id/fuelTrimGauge"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginBottom="0dp"-->
-<!--                android:layout_toEndOf="@id/fuelTrimGauge"-->
-<!--                android:gravity="center"-->
-<!--                android:text="0"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:textSize="34sp" />-->
+        <!--            <TextView-->
+        <!--                android:id="@+id/fuelTrimTextOverlay"-->
+        <!--                android:layout_width="106dp"-->
+        <!--                android:layout_height="46dp"-->
+        <!--                android:layout_alignTop="@id/fuelTrimGauge"-->
+        <!--                android:layout_alignBottom="@id/fuelTrimGauge"-->
+        <!--                android:layout_marginStart="20dp"-->
+        <!--                android:layout_marginBottom="0dp"-->
+        <!--                android:layout_toEndOf="@id/fuelTrimGauge"-->
+        <!--                android:gravity="center"-->
+        <!--                android:text="0"-->
+        <!--                android:textAlignment="center"-->
+        <!--                android:textColor="@color/white"-->
+        <!--                android:textSize="34sp" />-->
 
-<!--        </RelativeLayout>-->
+        <!--        </RelativeLayout>-->
 
     </LinearLayout>
 
-<!--    <com.example.racestats.DraggableGaugeView-->
-<!--        android:id="@+id/rpmGauge"-->
-<!--        android:layout_width="350dp"-->
-<!--        android:layout_height="63dp"-->
-<!--        android:text="Engine RPM: "-->
-<!--        android:textSize="18sp"-->
-<!--        android:visibility="gone" />-->
+    <!--    <com.example.racestats.DraggableGaugeView-->
+    <!--        android:id="@+id/rpmGauge"-->
+    <!--        android:layout_width="350dp"-->
+    <!--        android:layout_height="63dp"-->
+    <!--        android:text="Engine RPM: "-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:visibility="gone" />-->
 
-<!--    <com.example.racestats.DraggableGaugeView-->
-<!--        android:id="@+id/coolantTempGauge"-->
-<!--        android:layout_width="350dp"-->
-<!--        android:layout_height="63dp"-->
-<!--        android:text="Coolant Temperature C°: "-->
-<!--        android:textSize="18sp"-->
-<!--        android:visibility="gone" />-->
+    <!--    <com.example.racestats.DraggableGaugeView-->
+    <!--        android:id="@+id/coolantTempGauge"-->
+    <!--        android:layout_width="350dp"-->
+    <!--        android:layout_height="63dp"-->
+    <!--        android:text="Coolant Temperature C°: "-->
+    <!--        android:textSize="18sp"-->
+    <!--        android:visibility="gone" />-->
 
 
     <!-- Add TextView to display coolantTemperature -->
@@ -282,7 +283,7 @@
         android:layout_alignParentEnd="true"
         android:background="#121312"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!-- x button to close pop out -->
         <ImageButton
@@ -339,19 +340,19 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
 
-<!--        <TextView-->
-<!--            android:id="@+id/gaugeOptionAfr"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_below="@id/gaugeOptionCoolant"-->
-<!--            android:clickable="true"-->
-<!--            android:focusable="true"-->
-<!--            android:gravity="center_horizontal"-->
-<!--            android:onClick="onGaugeOptionClick"-->
-<!--            android:padding="10dp"-->
-<!--            android:text="AFR - Active"-->
-<!--            android:textColor="@color/white"-->
-<!--            android:textSize="20sp" />-->
+        <!--        <TextView-->
+        <!--            android:id="@+id/gaugeOptionAfr"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_below="@id/gaugeOptionCoolant"-->
+        <!--            android:clickable="true"-->
+        <!--            android:focusable="true"-->
+        <!--            android:gravity="center_horizontal"-->
+        <!--            android:onClick="onGaugeOptionClick"-->
+        <!--            android:padding="10dp"-->
+        <!--            android:text="AFR - Active"-->
+        <!--            android:textColor="@color/white"-->
+        <!--            android:textSize="20sp" />-->
 
         <TextView
             android:id="@+id/gaugeOptionFuelTrim"
