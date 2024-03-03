@@ -42,7 +42,7 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 // Imports for OBD2 classes
 import com.github.pires.obd.commands.ObdCommand;
-import com.github.pires.obd.commands.fuel.FuelTrimCommand;
+//import com.github.pires.obd.commands.fuel.FuelTrimCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
@@ -59,12 +59,11 @@ import java.util.Random;
 public class DigitalDash extends AppCompatActivity {
     private static BluetoothSocket socket;
     private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Button addCustomGauge;
 
     // Declare member variables here
     private RelativeLayout intakeTempGauge;
     private RelativeLayout coolantTempGauge;
-    private RelativeLayout fuelTrim;
+//    private RelativeLayout fuelTrim;
 
     private ImageButton hamburgerButton;
     private LinearLayout popoutMenu;
@@ -86,9 +85,9 @@ public class DigitalDash extends AppCompatActivity {
     private boolean hasFlashed = false;
 
     private CustomProgressBar intakeTemperatureGauge;
-    private CustomProgressBar fuelTrimGauge;
+//    private CustomProgressBar fuelTrimGauge;
     private TextView intakeTemperatureTextOverlay;
-    private TextView fuelTrimTextOverlay;
+//    private TextView fuelTrimTextOverlay;
 
     private final Handler dataUpdateHandler = new Handler();
     private static final long DATA_UPDATE_INTERVAL = 5000; // Update interval in milliseconds
@@ -236,7 +235,7 @@ public class DigitalDash extends AppCompatActivity {
         });
 
 
-        addCustomGauge = findViewById(R.id.addCustomGauge);
+        Button addCustomGauge = findViewById(R.id.addCustomGauge);
 
         addCustomGauge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -319,9 +318,9 @@ public class DigitalDash extends AppCompatActivity {
             case R.id.gaugeOptionCoolant:
                 toggleGaugeVisibility(coolantTempGauge);
                 break;
-            case R.id.gaugeOptionFuelTrim:
-                toggleGaugeVisibility(fuelTrim);
-                break;
+//            case R.id.gaugeOptionFuelTrim:
+//                toggleGaugeVisibility(fuelTrim);
+//                break;
 
             // Add cases for more gauge options
         }
@@ -413,7 +412,7 @@ public class DigitalDash extends AppCompatActivity {
 
             // Iterate through PIDs 0-250 and check availability
             for (int i = 0; i <= 250; i++) {
-                ObdCommand pidCommand = new CustomPIDCommand(i, "pid = " + i);  // Replace CustomPIDCommand with the appropriate command
+                ObdCommand pidCommand = new CustomPIDCommand("pid = " + i);  // Replace CustomPIDCommand with the appropriate command
                 pidCommand.run(socket.getInputStream(), socket.getOutputStream());
                 if (!pidCommand.getResult().equals("NO DATA")) {
                     availablePIDs[i] = i;
@@ -443,7 +442,7 @@ public class DigitalDash extends AppCompatActivity {
             new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
 
             // Create a command for the specified PID
-            ObdCommand pidCommand = new CustomPIDCommand(pidToRetrieve, "Custom Command Name");
+            ObdCommand pidCommand = new CustomPIDCommand("Custom Command Name");
             pidCommand.run(socket.getInputStream(), socket.getOutputStream());
 
             // Parse the result and return the value
@@ -525,11 +524,11 @@ public class DigitalDash extends AppCompatActivity {
      *
      * @param temperature
      */
-    private void updateFuelTrim(int temperature) {
-        fuelTrimGauge.setProgress(temperature);
-        fuelTrimTextOverlay.setText(String.valueOf(temperature));
-        fuelTrimGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
-    }
+//    private void updateFuelTrim(int temperature) {
+//        fuelTrimGauge.setProgress(temperature);
+//        fuelTrimTextOverlay.setText(String.valueOf(temperature));
+//        fuelTrimGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
+//    }
 
 
     /**
@@ -587,7 +586,10 @@ public class DigitalDash extends AppCompatActivity {
             List<ObdCommand> commandsToRun = new ArrayList<>();
             commandsToRun.add(new EngineCoolantTemperatureCommand());
             commandsToRun.add(new AirIntakeTemperatureCommand());
-            commandsToRun.add(new FuelTrimCommand());
+            // Add the custom PID command to the list of commands to run
+            CustomPIDCommand customPIDCommand = new CustomPIDCommand("MyCustomPID");
+            commandsToRun.add(customPIDCommand);
+//            commandsToRun.add(new FuelTrimCommand());
 
             ExecutorService executorService = Executors.newFixedThreadPool(commandsToRun.size());
             List<Future<String>> futures = new ArrayList<>();
@@ -649,12 +651,20 @@ public class DigitalDash extends AppCompatActivity {
             updateAirIntakeTemperature(intakeTemp);
         }
 
-        // Example: Update the fuel trim gauge
-        String fuelTrimResult = extractNumericPart(results.get(2));
-        if (fuelTrimResult != null) {
-            int fuelTrimResultVal = Integer.parseInt(fuelTrimResult);
-            updateFuelTrim(fuelTrimResultVal);
+        // Example: Update the custom PID value
+        String customPIDResult = extractNumericPart(results.get(2));
+        if (customPIDResult != null) {
+            int customPIDValue = Integer.parseInt(customPIDResult);
+            // Update UI or perform other actions with the custom PID value
+            Log.d("Custom PID Value", String.valueOf(customPIDValue));
         }
+
+//        // Example: Update the fuel trim gauge
+//        String fuelTrimResult = extractNumericPart(results.get(2));
+//        if (fuelTrimResult != null) {
+//            int fuelTrimResultVal = Integer.parseInt(fuelTrimResult);
+////            updateFuelTrim(fuelTrimResultVal);
+//        }
 
         // ... Process other OBD2 commands here ...
     }
