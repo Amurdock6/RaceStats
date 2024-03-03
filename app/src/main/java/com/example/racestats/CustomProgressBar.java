@@ -36,13 +36,13 @@ public class CustomProgressBar extends ProgressBar {
 
     private void drawMarks(Canvas canvas) {
         // Define the progress points where you want to draw marks
-        int[] progressPoints = {81, 100};
+        int[] progressPoints = {61, 100};
 
         int width = getWidth();
         int height = getHeight();
 
         for (int progress : progressPoints) {
-            float xPos = width * progress / getMax();
+            float xPos = (float) (width * progress) / getMax();
             float yPos = height / 2f; // Center vertically
 
             // Draw a mark at the specified position with the calculated markHeight
@@ -51,7 +51,7 @@ public class CustomProgressBar extends ProgressBar {
 
         // Ensure coolantTemperatureTextOverlay is not null before setting its position and text
         if (coolantTemperatureTextOverlay != null) {
-            coolantTemperatureTextOverlay.setX(width * coolantTemperature / getMax() + 110);
+            coolantTemperatureTextOverlay.setX((float) (width * coolantTemperature) / getMax() + 110);
             coolantTemperatureTextOverlay.setY(height / 2f);
             coolantTemperatureTextOverlay.setText(coolantTemperature + "°C");
         }

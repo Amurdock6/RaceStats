@@ -10,4 +10,14 @@
     <string name="recordedTimeOne">0-60: 00:00.00</string>
     <string name="recordedTimeTwo">60-100: 00:00.00</string>
     <string name="recordedTimeThree">100-120: 00:00.00</string>
+    <string name="back_arrow_to_mian_page">Back arrow to mian page</string>
+    <string name="hamburger_button_to_activate_and_deactivate_gauges">Hamburger button to activate and deactivate gauges</string>
+    <string name="coolant_logo">Coolant logo</string>
+    <string name="_0_c">0°C</string>
+    <string name="intake_logo">Intake logo</string>
+    <string name="availabe_data">Availabe Data</string>
+    <string name="close_button">Close button</string>
+    <string name="coolant_temp_active">Coolant Temp - Active</string>
+    <string name="intake_temp_active">Intake Temp - Active</string>
+    <string name="add_custom_gauge">Add Custom Gauge</string>
 </resources>

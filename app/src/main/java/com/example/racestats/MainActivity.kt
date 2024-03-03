@@ -177,4 +177,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun onGaugeOptionClick(view: View) {}
 }

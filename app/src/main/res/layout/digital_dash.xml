@@ -1,6 +1,5 @@
 <!-- res/layout/digital_dash.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,7 +23,8 @@
             android:background="?android:attr/selectableItemBackground"
             android:baselineAlignBottom="false"
             android:src="@drawable/home_icon"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck"
+            android:contentDescription="@string/back_arrow_to_mian_page" />
 
         <!-- hamburger button -->
         <ImageButton
@@ -36,7 +36,8 @@
             android:background="?android:attr/selectableItemBackground"
             android:baselineAlignBottom="false"
             android:src="@drawable/hamburger"
-            tools:ignore="SpeakableTextPresentCheck" />
+            tools:ignore="SpeakableTextPresentCheck"
+            android:contentDescription="@string/hamburger_button_to_activate_and_deactivate_gauges" />
 
     </RelativeLayout>
 
@@ -66,7 +67,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/coolant_logo_white" />
+                android:src="@drawable/coolant_logo_white"
+                android:contentDescription="@string/coolant_logo" />
 
             <com.example.racestats.CustomProgressBar
                 android:id="@+id/coolantTemperatureGauge"
@@ -88,7 +90,7 @@
                 android:layout_marginBottom="0dp"
                 android:layout_toEndOf="@id/coolantTemperatureGauge"
                 android:gravity="center"
-                android:text="0°C"
+                android:text="@string/_0_c"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="34sp" />
@@ -110,7 +112,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="8dp"
-                android:src="@drawable/airintake" />
+                android:src="@drawable/airintake"
+                android:contentDescription="@string/intake_logo" />
 
             <com.example.racestats.CustomProgressBar
                 android:id="@+id/intakeTemperatureGauge"
@@ -132,7 +135,7 @@
                 android:layout_marginBottom="-4dp"
                 android:layout_toEndOf="@id/intakeTemperatureGauge"
                 android:gravity="center"
-                android:text="0°C"
+                android:text="@string/_0_c"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="34sp" />
@@ -249,36 +252,8 @@
     <!-- Add TextView to display coolantTemperature -->
 
     <LinearLayout
-        android:id="@+id/simpleTemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@drawable/box_shadow_gradient"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:visibility="gone"> <!-- Adjust padding as needed -->
-
-        <ImageView
-            android:id="@+id/coolantLogoSimple"
-            android:layout_width="117dp"
-            android:layout_height="84dp"
-            android:src="@drawable/coolant_logo_white" />
-
-        <TextView
-            android:id="@+id/textTempSimple"
-            android:layout_width="120dp"
-            android:layout_height="55dp"
-            android:gravity="center"
-            android:text="0°C"
-            android:textAlignment="center"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/popoutMenu"
-        android:layout_width="230dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:background="#121312"
@@ -295,6 +270,7 @@
             android:layout_marginEnd="0dp"
             android:background="?android:attr/selectableItemBackground"
             android:baselineAlignBottom="false"
+            android:contentDescription="@string/close_button"
             android:src="@drawable/xwhite"
             android:visibility="gone"
             tools:ignore="SpeakableTextPresentCheck" />
@@ -308,9 +284,9 @@
             android:layout_marginTop="20sp"
             android:gravity="center_horizontal"
             android:padding="16dp"
-            android:text="Availabe Data"
+            android:text="@string/availabe_data"
             android:textColor="@color/white"
-            android:textSize="22sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
@@ -322,59 +298,32 @@
             android:gravity="center_horizontal"
             android:onClick="onGaugeOptionClick"
             android:padding="12dp"
-            android:text="Coolant Temp - Active"
+            android:text="@string/coolant_temp_active"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/gaugeOptionIntakeTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/gaugeOptionCoolant"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_horizontal"
             android:onClick="onGaugeOptionClick"
             android:padding="10dp"
-            android:text="Intake Temp - Active"
+            android:text="@string/intake_temp_active"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="22sp" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/gaugeOptionAfr"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_below="@id/gaugeOptionCoolant"-->
-        <!--            android:clickable="true"-->
-        <!--            android:focusable="true"-->
-        <!--            android:gravity="center_horizontal"-->
-        <!--            android:onClick="onGaugeOptionClick"-->
-        <!--            android:padding="10dp"-->
-        <!--            android:text="AFR - Active"-->
-        <!--            android:textColor="@color/white"-->
-        <!--            android:textSize="20sp" />-->
-
-        <TextView
-            android:id="@+id/gaugeOptionFuelTrim"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/gaugeOptionCoolant"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center_horizontal"
-            android:onClick="onGaugeOptionClick"
-            android:padding="10dp"
-            android:text="Fuel Trim - Active"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
 
         <Button
             android:id="@+id/addCustomGauge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="12px"
-            android:text="Add Custom Gauge" />
+            android:layout_margin="12dp"
+            android:padding="12dp"
+            android:text="@string/add_custom_gauge" />
 
         <!-- Add more gauge options as needed -->
     </LinearLayout>
