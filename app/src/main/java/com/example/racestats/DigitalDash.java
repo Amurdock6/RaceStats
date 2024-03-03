@@ -273,8 +273,10 @@ public class DigitalDash extends AppCompatActivity {
             try {
                 availablePIDs("pid_values.txt");
 //                int pid = Integer.parseInt(pidString);
+
 //                // Pass the values to the getPID method
 //                int result = getPID(pid);
+//                int ressult = getPID("01 C0");
 //                // Process the result or perform any necessary actions
 //                // (e.g., display result in a toast or update UI)
 //                Log.d("Result of custom pid call: ", String.valueOf(result));
@@ -402,8 +404,8 @@ public class DigitalDash extends AppCompatActivity {
             // Create a StringBuilder to store PIDs and values
             StringBuilder pidValuesStringBuilder = new StringBuilder();
 
-            // Iterate through ASCII values 0-127 (possible range for a single byte)
-            for (int i = 0; i <= 127; i++) {
+            // Iterate through ASCII values 00 to FF
+            for (int i = 0x00; i <= 0xFF; i++) {
                 String pidCommandStr = String.format("01 %02X", i);
                 ObdCommand pidCommand = new CustomPIDCommand(pidCommandStr);
 
@@ -421,34 +423,30 @@ public class DigitalDash extends AppCompatActivity {
                 }
             }
 
-            // Save PIDs and values to a txt file
-            saveToFile(fileName, pidValuesStringBuilder.toString());
+            // Save PIDs and values to internal storage
+            saveToInternalStorage(fileName, pidValuesStringBuilder.toString());
 
         } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
             // Optionally, you can handle exceptions or return null
+            e.printStackTrace();
         }
     }
 
-    private void saveToFile(String fileName, String content) {
-        try {
-            // Get the file reference
-            File file = new File(fileName);
 
-            // Create the file if it doesn't exist
-            if (!file.exists()) {
-                if (!file.createNewFile()) {
-                    Log.e("OBD2", "Error creating file: " + fileName);
-                    return;
-                }
-            }
+    private void saveToInternalStorage(String fileName, String content) {
+        try {
+            // Get the application's internal storage directory
+            File internalStorageDir = getFilesDir();
+
+            // Create the file in the internal storage directory
+            File file = new File(internalStorageDir, fileName);
 
             // Save content to the file
             FileWriter writer = new FileWriter(file);
             writer.write(content);
             writer.close();
 
-            Log.d("OBD2", "PIDs and values saved to: " + fileName);
+            Log.d("OBD2", "PIDs and values saved to: " + file.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
             // Handle the exception if needed
@@ -458,34 +456,34 @@ public class DigitalDash extends AppCompatActivity {
 
 
 
-//    /**
-//     * This class is used to retrieve the value that is at the given PID
-//     *
-//     * @param pidToRetrieve the PID to retrieve
-//     * @return the value of the specified PID
-//     */
-//    private int getPID(int pidToRetrieve) {
-//        try {
-//            // Initialize OBD2 communication
-//            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-//            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-//            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-//            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
-//
-//            // Create a command for the specified PID
-//            ObdCommand pidCommand = new CustomPIDCommand("Custom Command Name");
-//            pidCommand.run(socket.getInputStream(), socket.getOutputStream());
-//
-//            // Parse the result and return the value
-//            String result = pidCommand.getFormattedResult();
-//            Log.d("Custom PID result", result);
-//            return Integer.parseInt(result);
-//
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//            return -1;
-//        }
-//    }
+    /**
+     * This class is used to retrieve the value that is at the given PID
+     *
+     * @param pidToRetrieve the PID to retrieve
+     * @return the value of the specified PID
+     */
+    private int getPID(int pidToRetrieve) {
+        try {
+            // Initialize OBD2 communication
+            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+
+            // Create a command for the specified PID
+            ObdCommand pidCommand = new CustomPIDCommand("01 C0");
+            pidCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+            // Parse the result and return the value
+            String result = pidCommand.getFormattedResult();
+            Log.d("Custom PID result", result);
+            return Integer.parseInt(result);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
 
     /**
@@ -598,6 +596,7 @@ public class DigitalDash extends AppCompatActivity {
             List<ObdCommand> commandsToRun = new ArrayList<>();
             commandsToRun.add(new EngineCoolantTemperatureCommand());
             commandsToRun.add(new AirIntakeTemperatureCommand());
+//            commandsToRun.add(new CustomPIDCommand("01 00"));
             // Add the custom PID command to the list of commands to run
 //            CustomPIDCommand customPIDCommand = new CustomPIDCommand("MyCustomPID");
 //            commandsToRun.add(customPIDCommand);
@@ -610,6 +609,8 @@ public class DigitalDash extends AppCompatActivity {
                 Future<String> future = executorService.submit(() -> {
                     try {
                         command.run(socket.getInputStream(), socket.getOutputStream());
+                        String result = command.getFormattedResult();
+                        Log.d("OBD2", "Command: " + command.getName() + ", Result: " + result); // Log the result
                         return command.getFormattedResult();
                     } catch (Exception e) {
                         e.printStackTrace();
