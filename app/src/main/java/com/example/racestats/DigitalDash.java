@@ -29,6 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 // multithreading imports
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,6 +56,7 @@ import com.github.pires.obd.commands.protocol.TimeoutCommand;
 import com.github.pires.obd.commands.temperature.AirIntakeTemperatureCommand;
 import com.github.pires.obd.commands.temperature.EngineCoolantTemperatureCommand;
 import com.github.pires.obd.enums.ObdProtocols;
+import com.github.pires.obd.exceptions.NoDataException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -267,7 +271,7 @@ public class DigitalDash extends AppCompatActivity {
 
             // Convert PID String to int
             try {
-                  availablePIDs();
+                availablePIDs("pid_values.txt");
 //                int pid = Integer.parseInt(pidString);
 //                // Pass the values to the getPID method
 //                int result = getPID(pid);
@@ -384,7 +388,10 @@ public class DigitalDash extends AppCompatActivity {
      *
 //     * @return an array of available PIDs
      */
-    private void availablePIDs() {
+    /**
+     * This function will check and see what PIDs are available for the selected ECU
+     */
+    private void availablePIDs(String fileName) {
         try {
             // Initialize OBD2 communication
             new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
@@ -392,28 +399,64 @@ public class DigitalDash extends AppCompatActivity {
             new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
             new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
 
-            // Create an array to store available PIDs
-//            int[] availablePIDs = new int[251];
+            // Create a StringBuilder to store PIDs and values
+            StringBuilder pidValuesStringBuilder = new StringBuilder();
 
-            // Iterate through PIDs 0-250 and check availability
-            for (int i = 0; i <= 500; i++) {
-                ObdCommand pidCommand = new CustomPIDCommand("pid = " + i);  // Replace CustomPIDCommand with the appropriate command
-                pidCommand.run(socket.getInputStream(), socket.getOutputStream());
-//                if (!pidCommand.getResult().equals("NO DATA")) {
-//                    availablePIDs[i] = i;
-//                }
+            // Iterate through ASCII values 0-127 (possible range for a single byte)
+            for (int i = 0; i <= 127; i++) {
+                String pidCommandStr = String.format("01 %02X", i);
+                ObdCommand pidCommand = new CustomPIDCommand(pidCommandStr);
 
-                // Log results to logcat
-                Log.d("OBD2", "PID " + i + ": " + pidCommand.getResult());
+                try {
+                    pidCommand.run(socket.getInputStream(), socket.getOutputStream());
+                    String result = pidCommand.getResult();
+
+                    if (!result.equals("NO DATA")) {
+                        Log.d("OBD2", "PID " + i + ": " + result);
+                        pidValuesStringBuilder.append("PID ").append(i).append(": ").append(result).append("\n");
+                    }
+                } catch (NoDataException e) {
+                    // Handle or ignore NoDataException for this specific PID command
+                    Log.d("OBD2", "No data for PID " + i);
+                }
             }
 
-//            return availablePIDs;
+            // Save PIDs and values to a txt file
+            saveToFile(fileName, pidValuesStringBuilder.toString());
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-//            return null;
+//            e.printStackTrace();
+            // Optionally, you can handle exceptions or return null
         }
     }
+
+    private void saveToFile(String fileName, String content) {
+        try {
+            // Get the file reference
+            File file = new File(fileName);
+
+            // Create the file if it doesn't exist
+            if (!file.exists()) {
+                if (!file.createNewFile()) {
+                    Log.e("OBD2", "Error creating file: " + fileName);
+                    return;
+                }
+            }
+
+            // Save content to the file
+            FileWriter writer = new FileWriter(file);
+            writer.write(content);
+            writer.close();
+
+            Log.d("OBD2", "PIDs and values saved to: " + fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle the exception if needed
+        }
+    }
+
+
+
 
 //    /**
 //     * This class is used to retrieve the value that is at the given PID
@@ -556,8 +599,8 @@ public class DigitalDash extends AppCompatActivity {
             commandsToRun.add(new EngineCoolantTemperatureCommand());
             commandsToRun.add(new AirIntakeTemperatureCommand());
             // Add the custom PID command to the list of commands to run
-            CustomPIDCommand customPIDCommand = new CustomPIDCommand("MyCustomPID");
-            commandsToRun.add(customPIDCommand);
+//            CustomPIDCommand customPIDCommand = new CustomPIDCommand("MyCustomPID");
+//            commandsToRun.add(customPIDCommand);
 //            commandsToRun.add(new FuelTrimCommand());
 
             ExecutorService executorService = Executors.newFixedThreadPool(commandsToRun.size());
@@ -620,12 +663,18 @@ public class DigitalDash extends AppCompatActivity {
         }
 
         // Example: Update the custom PID value
-        String customPIDResult = extractNumericPart(results.get(2));
-        if (customPIDResult != null) {
-            int customPIDValue = Integer.parseInt(customPIDResult);
-            // Update UI or perform other actions with the custom PID value
-            Log.d("Custom PID Value", String.valueOf(customPIDValue));
-        }
+//        String customPIDResult = extractNumericPart(results.get(2));
+//        if (customPIDResult != null && !customPIDResult.isEmpty()) {
+//            try {
+//                int customPIDValue = Integer.parseInt(customPIDResult);
+//                // Update UI or perform other actions with the custom PID value
+//                Log.d("Custom PID Value", String.valueOf(customPIDValue));
+//            } catch (NumberFormatException e) {
+//                // Handle the case where parsing fails, e.g., log an error
+//                Log.e("Custom PID Parsing", "Error parsing custom PID result: " + customPIDResult);
+//            }
+//        }
+
 
 //        // Example: Update the fuel trim gauge
 //        String fuelTrimResult = extractNumericPart(results.get(2));
