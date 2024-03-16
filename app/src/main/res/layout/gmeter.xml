@@ -32,11 +32,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/leftForceTextView"
+            android:id="@+id/brakingForceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:text="Left Force: 0 G"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="30dp"
+            android:text="Braking Force: 0 G"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
@@ -45,18 +46,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="1000dp"
+            android:paddingBottom="200dp"
             android:text="Right Force: 0 G"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
         <TextView
-            android:id="@+id/brakingForceTextView"
+            android:id="@+id/leftForceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="10dp"
-            android:text="Braking Force: 0 G"
+            android:paddingLeft="30dp"
+            android:text="Left Force: 0 G"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
@@ -65,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="980dp"
             android:text="Acceleration Force: 0 G"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
@@ -75,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="1000dp"
             android:text="Max G-Force: 0 G"
             android:textColor="@android:color/white"
             android:textSize="24sp" />
