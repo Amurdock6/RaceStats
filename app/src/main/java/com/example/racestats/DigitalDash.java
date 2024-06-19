@@ -276,7 +276,7 @@ public class DigitalDash extends AppCompatActivity {
 
 //                // Pass the values to the getPID method
 //                int result = getPID(pid);
-//                int ressult = getPID("01 C0");
+//                int ressult = getPID("01");
 //                // Process the result or perform any necessary actions
 //                // (e.g., display result in a toast or update UI)
 //                Log.d("Result of custom pid call: ", String.valueOf(result));
@@ -378,11 +378,12 @@ public class DigitalDash extends AppCompatActivity {
 
 
            // look into these
-////        PID           Bytes A   B C D Name Description
-////        1101 4353 1       61          Engine Coolant Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as Mode 01:05, but +10
-////        1102 4354 1       00          Vehicle Speed kph = A*2, mph = (A*2)/1.60934
-////        1103 4355 1       96          Battery Voltage V = A/12.5 or V=A*.08
-////        111F 4383 1       5F          Oil Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as 580:E
+//        PID           Bytes A   B C D Name Description
+//        111F 4383 1       5F          Oil Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as 580:E
+//        1101 4353 1       61          Engine Coolant Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as Mode 01:05, but +10
+//        1102 4354 1       00          Vehicle Speed kph = A*2, mph = (A*2)/1.60934
+//        1103 4355 1       96          Battery Voltage V = A/12.5 or V=A*.08
+
 
 
     /**
