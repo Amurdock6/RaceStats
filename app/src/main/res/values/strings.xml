@@ -10,23 +10,14 @@
     <string name="recordedTimeOne">0-60: 00:00.00</string>
     <string name="recordedTimeTwo">60-100: 00:00.00</string>
     <string name="recordedTimeThree">100-120: 00:00.00</string>
-
-    <string name="back_arrow">Back</string>
-    <string name="hamburger_button">Menu</string>
-    <string name="coolant_logo">Coolant Logo</string>
-    <string name="coolant_temperature">0°C</string>
-    <string name="intake_logo">Intake Logo</string>
-    <string name="intake_temperature">0°C</string>
-    <string name="coolant_logo_simple">Coolant Logo Simple</string>
-    <string name="temp_simple">0°C</string>
-    <string name="close_popout_menu">Close Menu</string>
-    <string name="available_data">Available Data</string>
+    <string name="back_arrow_to_mian_page">Back arrow to mian page</string>
+    <string name="hamburger_button_to_activate_and_deactivate_gauges">Hamburger button to activate and deactivate gauges</string>
+    <string name="coolant_logo">Coolant logo</string>
+    <string name="_0_c">0°C</string>
+    <string name="intake_logo">Intake logo</string>
+    <string name="availabe_data">Availabe Data</string>
+    <string name="close_button">Close button</string>
     <string name="coolant_temp_active">Coolant Temp - Active</string>
     <string name="intake_temp_active">Intake Temp - Active</string>
-    <string name="fuel_trim_active">Fuel Trim - Active</string>
     <string name="add_custom_gauge">Add Custom Gauge</string>
-    <string name="no_bluetooth_title">No Bluetooth Device Detected</string>
-    <string name="no_bluetooth_message">There is no Bluetooth device connected. Please connect a device and try again.</string>
-    <string name="temperature_format">%d °C</string>
-    <string name="ok_button">OK</string>
 </resources>

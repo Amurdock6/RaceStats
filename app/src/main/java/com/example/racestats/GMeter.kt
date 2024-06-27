@@ -35,7 +35,8 @@ class GMeter : AppCompatActivity() {
         setContentView(R.layout.gmeter)
 
         // Set the activity to full-screen mode
-        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
+        window.decorView.systemUiVisibility =
+            (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
@@ -102,8 +103,8 @@ class GMeter : AppCompatActivity() {
 
         override fun onSensorChanged(event: SensorEvent) {
             // Assuming event.values[0] is left/right, event.values[1] is up/down
-            val leftRightForce = event.values[0] / MAX_GRAVITY
-            val upDownForce = event.values[1] / MAX_GRAVITY
+            val leftRightForce = event.values[1] / MAX_GRAVITY // Switch left/right with braking/acceleration
+            val upDownForce = event.values[0] / MAX_GRAVITY // Switch up/down with acceleration/braking
 
             // Assuming your custom view has appropriate methods to update the forces
             geForceView.updateForces(leftRightForce, upDownForce)
