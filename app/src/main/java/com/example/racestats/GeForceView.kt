@@ -69,9 +69,10 @@ class GeForceView : View {
         val centerY = (height - padding * 2) / 2f + padding
 
         // Adjusted radii for better visibility
-        val circleRadius1 = (width - padding * 4) / 10f
-        val circleRadius2 = (width - padding * 4) / 5f // 50% of above value
-        val circleRadius3 = (width - padding * 4) / 3.5f // 73% of above value
+        val circleRadius1 = (width - padding * 4) / 10f * 0.9f // Scale down by about 10%
+        val circleRadius2 = (width - padding * 4) / 5f * 0.9f // Scale down by about 10%
+        val circleRadius3 = (width - padding * 4) / 3.5f * 0.9f // Scale down by about 10%
+
 
         // Draw the trail dots
         for (i in 0 until trailDots.size) {
@@ -101,6 +102,7 @@ class GeForceView : View {
             trailDots.removeAt(trailDots.size - 1)
         }
     }
+
 
     // Calibration method to reset forces to 0
     fun calibrate() {

@@ -1,51 +1,49 @@
 package com.example.racestats;
 
+import android.util.Log;
 
 import com.github.pires.obd.commands.ObdCommand;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CustomPIDCommand extends ObdCommand{
+public class CustomPIDCommand extends ObdCommand {
 
     private final String customName;
+    private int rawValue;
 
-    // Constructor to initialize the command with a custom PID and name
-    public CustomPIDCommand(int pid, String customName) {
-        super(String.valueOf(pid));
+    public CustomPIDCommand(String customName) {
+        super(customName);
         this.customName = customName;
     }
 
-    // Implement the calculations you want to perform with the raw data
     @Override
     protected void performCalculations() {
-        // Your custom calculations here
+        // Assuming the raw data is at index 2
+        rawValue = buffer.get(2) & 0xFF; // Convert to unsigned byte
     }
 
-    // Implement how the result should be formatted
     @Override
     public String getFormattedResult() {
-        // Your formatting logic here
-        return "";
+        // Format the result for display
+        return "Raw Result: " + rawValue;
     }
 
-    // Implement how the calculated result should be represented
     @Override
     public String getCalculatedResult() {
-        // Your calculated result logic here
-        return "";
+        // Return the raw result as a string
+        return String.valueOf(rawValue);
     }
 
-    // Implement the name of your custom PID command
     @Override
     public String getName() {
         return customName;
     }
 
-    // Send the custom PID to the OBD-II device
     @Override
     protected void sendCommand(OutputStream out) throws IOException, InterruptedException {
         // Include any additional formatting required for your specific OBD-II device
+        Log.d("CustomPIDCommand", "Sending command: " + cmd);
         super.sendCommand(out);
     }
 }
