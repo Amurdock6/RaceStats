@@ -3,13 +3,14 @@ package com.example.racestats;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,21 +27,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-// multithreading imports
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
+import android.view.ViewGroup.LayoutParams;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
-
-// Imports for OBD2 classes
 import com.github.pires.obd.commands.ObdCommand;
 import com.github.pires.obd.commands.fuel.FuelTrimCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
@@ -54,17 +49,18 @@ import com.github.pires.obd.enums.ObdProtocols;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+//import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class DigitalDash extends AppCompatActivity {
     private static BluetoothSocket socket;
-    private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Button addCustomGauge;
 
     // Declare member variables here
     private RelativeLayout intakeTempGauge;
     private RelativeLayout coolantTempGauge;
-    private RelativeLayout fuelTrim;
+//    private RelativeLayout fuelTrim;
 
     private ImageButton hamburgerButton;
     private LinearLayout popoutMenu;
@@ -76,23 +72,23 @@ public class DigitalDash extends AppCompatActivity {
 
     private CustomProgressBar coolantTemperatureGauge;
     private TextView coolantTemperatureTextOverlay;
-    private TextView textTempSimple;
     private TextView coolantTempTextSimple;
     private ImageView coolantLogoSimple;
 
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private boolean isFlashing = false;
     private int flashCount = 0;
     private boolean hasFlashed = false;
 
     private CustomProgressBar intakeTemperatureGauge;
-    private CustomProgressBar fuelTrimGauge;
+//    private CustomProgressBar fuelTrimGauge;
     private TextView intakeTemperatureTextOverlay;
-    private TextView fuelTrimTextOverlay;
+//    private TextView fuelTrimTextOverlay;
 
     private final Handler dataUpdateHandler = new Handler();
     private static final long DATA_UPDATE_INTERVAL = 5000; // Update interval in milliseconds
 
+    @SuppressLint({"CutPasteId", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,14 +101,13 @@ public class DigitalDash extends AppCompatActivity {
 
         // Hide the navigation bar
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         // Initialize gauges and assets for UI
         intakeTempGauge = findViewById(R.id.IntakeTemp);
         coolantTempGauge = findViewById(R.id.coolantTemp);
-//        fuelTrim = findViewById(R.id.fuelTrim);
+        // fuelTrim = findViewById(R.id.fuelTrim);
 
         // Get the Bluetooth device address from the intent
         String deviceAddress = getIntent().getStringExtra("deviceAddress");
@@ -126,13 +121,15 @@ public class DigitalDash extends AppCompatActivity {
         coolantTemperatureGauge = findViewById(R.id.coolantTemperatureGauge);
         coolantTempTextSimple = findViewById(R.id.textTempSimple);
         coolantLogoSimple = findViewById(R.id.coolantLogoSimple);
-        textTempSimple = findViewById(R.id.textTempSimple);
+        TextView textTempSimple = findViewById(R.id.textTempSimple);
 
         intakeTemperatureGauge = findViewById(R.id.intakeTemperatureGauge);
         intakeTemperatureTextOverlay = findViewById(R.id.intakeTemperatureTextOverlay);
 
-//        fuelTrimGauge = findViewById(R.id.fuelTrimGauge);
-//        fuelTrimTextOverlay = findViewById(R.id.fuelTrimTextOverlay);
+        // fuelTrimGauge = findViewById(R.id.fuelTrimGauge);
+        // fuelTrimTextOverlay = findViewById(R.id.fuelTrimTextOverlay);
+
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         hamburgerButton.setOnClickListener(view -> {
             if (!isMenuOpen) {
@@ -150,21 +147,18 @@ public class DigitalDash extends AppCompatActivity {
             }
         });
 
-
         if (deviceAddress == null) {
-//            Show a popup indicating that no Bluetooth device is connected
+            // Show a popup indicating that no Bluetooth device is connected
+            showNoBluetoothDeviceDialog();
 //            AlertDialog.Builder builder = new AlertDialog.Builder(this);
 //            builder.setTitle("No Bluetooth Device Detected");
 //            builder.setMessage("There is no Bluetooth device connected. Please connect a device and try again.");
 //            builder.setPositiveButton("OK", (dialog, which) -> finish());
 //            builder.show();
 
-//          add dev test buttons here generate random values
-//            rpmGauge.setText("Intake Temp: " + generateRandomNumber(4));
-//            coolantTempGauge.setText("Coolant Temperature C°: " + 2);
+            // Add dev test buttons here generate random values
             updateCoolantTemperature(75);
             updateAirIntakeTemperature(35);
-//            updateFuelTrim(35);
             textTempSimple.setText("75");
 
         } else {
@@ -182,6 +176,7 @@ public class DigitalDash extends AppCompatActivity {
 
             try {
                 // Connect socket and execute OBD2 commands in a separate thread
+                assert socket != null;
                 socket.connect();
 
                 // Run OBD2 commands in new Thread
@@ -189,7 +184,6 @@ public class DigitalDash extends AppCompatActivity {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-
         }
 
         // Start the data update loop
@@ -197,55 +191,44 @@ public class DigitalDash extends AppCompatActivity {
 
         backbutton = findViewById(R.id.backArrow);
         // Set a click listener for the home icon
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Rotate and change the drawable based on the rotation state
-                if (isHomeIconRotated) {
-                    ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(backbutton, "rotation", 55f, 0f);
-                    ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(backbutton, "scaleX", 1.0f, 0.8f);
-                    ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(backbutton, "scaleY", 1.0f, 0.8f);
-                    AnimatorSet set = new AnimatorSet();
-                    set.playTogether(rotationAnim, scaleXAnim, scaleYAnim);
-                    set.setDuration(300);
-                    set.start();
+        backbutton.setOnClickListener(v -> {
+            // Rotate and change the drawable based on the rotation state
+            if (isHomeIconRotated) {
+                ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(backbutton, "rotation", 55f, 0f);
+                ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(backbutton, "scaleX", 1.0f, 0.8f);
+                ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(backbutton, "scaleY", 1.0f, 0.8f);
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(rotationAnim, scaleXAnim, scaleYAnim);
+                set.setDuration(300);
+                set.start();
 
-                    // Set the bars icon drawable to the ImageView
-                    Drawable barsIconDrawable = VectorDrawableCompat.create(getResources(), R.drawable.home_icon, getTheme());
-                    backbutton.setImageDrawable(barsIconDrawable);
-                } else {
-                    ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(backbutton, "rotation", 0f, 335f);
-                    ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(backbutton, "scaleX", 1.0f, 1.0f);
-                    ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(backbutton, "scaleY", 1.0f, 1.0f);
-                    AnimatorSet set = new AnimatorSet();
-                    set.playTogether(rotationAnim, scaleXAnim, scaleYAnim);
-                    set.setDuration(650);
-                    set.start();
+                // Set the bars icon drawable to the ImageView
+                Drawable barsIconDrawable = VectorDrawableCompat.create(getResources(), R.drawable.home_icon, getTheme());
+                backbutton.setImageDrawable(barsIconDrawable);
+            } else {
+                ObjectAnimator rotationAnim = ObjectAnimator.ofFloat(backbutton, "rotation", 0f, 335f);
+                ObjectAnimator scaleXAnim = ObjectAnimator.ofFloat(backbutton, "scaleX", 1.0f, 1.0f);
+                ObjectAnimator scaleYAnim = ObjectAnimator.ofFloat(backbutton, "scaleY", 1.0f, 1.0f);
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(rotationAnim, scaleXAnim, scaleYAnim);
+                set.setDuration(650);
+                set.start();
 
-                    // Set the X icon drawable to the ImageView
-                    Drawable xIconDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_x_icon, getTheme());
-                    backbutton.setImageDrawable(xIconDrawable);
-                }
-
-                // Toggle the rotation state
-                isHomeIconRotated = !isHomeIconRotated;
-
-                Intent intent = new Intent(DigitalDash.this, MainActivity.class);
-                startActivity(intent);
+                // Set the X icon drawable to the ImageView
+                Drawable xIconDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_x_icon, getTheme());
+                backbutton.setImageDrawable(xIconDrawable);
             }
+
+            // Toggle the rotation state
+            isHomeIconRotated = !isHomeIconRotated;
+
+            Intent intent = new Intent(DigitalDash.this, MainActivity.class);
+            startActivity(intent);
         });
 
-
-        addCustomGauge = findViewById(R.id.addCustomGauge);
-
-        addCustomGauge.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    showAddCustomGaugeDialog();
-            }
-        });
+        Button addCustomGauge = findViewById(R.id.addCustomGauge);
+        addCustomGauge.setOnClickListener(v -> showAddCustomGaugeDialog());
     }
-
 
     private void showAddCustomGaugeDialog() {
         // Create an AlertDialog with an EditText for PID and Name input
@@ -266,33 +249,25 @@ public class DigitalDash extends AppCompatActivity {
         builder.setView(layout);
 
         // Set up the buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // Get the values entered by the user
-                String pidString = pidEditText.getText().toString();
-                String name = nameEditText.getText().toString();
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            // Get the values entered by the user
+            String pidString = pidEditText.getText().toString();
+//            String name = nameEditText.getText().toString();
 
-                // Convert PID String to int
-                try {
-                    int pid = Integer.parseInt(pidString);
-                    // Pass the values to the getPID method
-                    int result = getPID(pid);
-                    // Process the result or perform any necessary actions
-                    // (e.g., display result in a toast or update UI)
-                    Toast.makeText(DigitalDash.this, "Result: " + result, Toast.LENGTH_SHORT).show();
-                } catch (NumberFormatException e) {
-                    Toast.makeText(DigitalDash.this, "Invalid PID", Toast.LENGTH_SHORT).show();
-                }
+            // Convert PID String to int
+            try {
+                int pid = Integer.parseInt(pidString);
+                // Pass the values to the getPID method
+                int result = getPID(pid);
+                // Process the result or perform any necessary actions
+                // (e.g., display result in a toast or update UI)
+                Toast.makeText(DigitalDash.this, "Result: " + result, Toast.LENGTH_SHORT).show();
+            } catch (NumberFormatException e) {
+                Toast.makeText(DigitalDash.this, "Invalid PID", Toast.LENGTH_SHORT).show();
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -310,6 +285,7 @@ public class DigitalDash extends AppCompatActivity {
         }, DATA_UPDATE_INTERVAL);
     }
 
+    @SuppressLint("NonConstantResourceId")
     public void onGaugeOptionClick(View view) {
         switch (view.getId()) {
             case R.id.gaugeOptionIntakeTemp:
@@ -318,9 +294,9 @@ public class DigitalDash extends AppCompatActivity {
             case R.id.gaugeOptionCoolant:
                 toggleGaugeVisibility(coolantTempGauge);
                 break;
-            case R.id.gaugeOptionFuelTrim:
-                toggleGaugeVisibility(fuelTrim);
-                break;
+//            case R.id.gaugeOptionFuelTrim:
+//                toggleGaugeVisibility(fuelTrim);
+//                break;
 
             // Add cases for more gauge options
         }
@@ -330,7 +306,6 @@ public class DigitalDash extends AppCompatActivity {
         int newVisibility = gaugeView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE;
         gaugeView.setVisibility(newVisibility);
     }
-
 
     private void openMenu() {
         isMenuOpen = true;
@@ -350,23 +325,21 @@ public class DigitalDash extends AppCompatActivity {
         rotation.start();
     }
 
-    /**
-     * Random number generator for testing purposes
-     *
-     * @param numberOfDigits
-     * @return
-     */
-    public static int generateRandomNumber(int numberOfDigits) {
-        if (numberOfDigits <= 0) {
-            throw new IllegalArgumentException("Number of digits must be a positive integer.");
-        }
-
-        Random random = new Random();
-        int minBound = (int) Math.pow(10, numberOfDigits - 1);
-        int maxBound = (int) Math.pow(10, numberOfDigits) - 1;
-
-        return random.nextInt(maxBound - minBound + 1) + minBound;
-    }
+//    /**
+//     * Random number generator for testing purposes
+//     *
+//     */
+//    public static int generateRandomNumber(int numberOfDigits) {
+//        if (numberOfDigits <= 0) {
+//            throw new IllegalArgumentException("Number of digits must be a positive integer.");
+//        }
+//
+//        Random random = new Random();
+//        int minBound = (int) Math.pow(10, numberOfDigits - 1);
+//        int maxBound = (int) Math.pow(10, numberOfDigits) - 1;
+//
+//        return random.nextInt(maxBound - minBound + 1) + minBound;
+//    }
 
     /**
      * Create a Bluetooth socket for the selected device
@@ -385,47 +358,38 @@ public class DigitalDash extends AppCompatActivity {
         }
     }
 
-
-           // look into these
-////        PID           Bytes A   B C D Name Description
-////        1101 4353 1       61          Engine Coolant Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as Mode 01:05, but +10
-////        1102 4354 1       00          Vehicle Speed kph = A*2, mph = (A*2)/1.60934
-////        1103 4355 1       96          Battery Voltage V = A/12.5 or V=A*.08
-////        111F 4383 1       5F          Oil Temperature °C = A-50, °F = (A - 50)*9/5+32, Same as 580:E
-
-
-    /**
-     * This function will check and see what PIDs are available for the selected ECU
-     *
-     * @return an array of available PIDs
-     */
-    private int[] availablePIDs() {
-        try {
-            // Initialize OBD2 communication
-            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
-            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
-
-            // Create an array to store available PIDs
-            int[] availablePIDs = new int[251];
-
-            // Iterate through PIDs 0-250 and check availability
-            for (int i = 0; i <= 250; i++) {
-                ObdCommand pidCommand = new CustomPIDCommand(i, "pid = " + i);  // Replace CustomPIDCommand with the appropriate command
-                pidCommand.run(socket.getInputStream(), socket.getOutputStream());
-                if (!pidCommand.getResult().equals("NO DATA")) {
-                    availablePIDs[i] = i;
-                }
-            }
-
-            return availablePIDs;
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    /**
+//     * This function will check and see what PIDs are available for the selected ECU
+//     *
+//     * @return an array of available PIDs
+//     */
+//    private int[] availablePIDs() {
+//        try {
+//            // Initialize OBD2 communication
+//            new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+//            new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+//            new TimeoutCommand(125).run(socket.getInputStream(), socket.getOutputStream());
+//            new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+//
+//            // Create an array to store available PIDs
+//            int[] availablePIDs = new int[251];
+//
+//            // Iterate through PIDs 0-250 and check availability
+//            for (int i = 0; i <= 250; i++) {
+//                ObdCommand pidCommand = new CustomPIDCommand(i, "pid = " + i);  // Replace CustomPIDCommand with the appropriate command
+//                pidCommand.run(socket.getInputStream(), socket.getOutputStream());
+//                if (!pidCommand.getResult().equals("NO DATA")) {
+//                    availablePIDs[i] = i;
+//                }
+//            }
+//
+//            return availablePIDs;
+//
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     /**
      * This class is used to retrieve the value that is at the given PID
@@ -455,32 +419,26 @@ public class DigitalDash extends AppCompatActivity {
         }
     }
 
-
     /**
      * Updates intake temp
      *
-     * @param temperature
      */
     private void updateAirIntakeTemperature(int temperature) {
         intakeTemperatureGauge.setProgress(temperature);
-        intakeTemperatureTextOverlay.setText(String.valueOf(temperature) + " °C");
-        intakeTemperatureGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
+        String formattedTemperature = getString(R.string.temperature_format, temperature);
+        intakeTemperatureTextOverlay.setText(formattedTemperature);
+        intakeTemperatureGauge.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.horizontal_gauge, null));
     }
 
+
     /**
-     * Handles coolant logo and flashing effects when coolant temp hits certian target temps
+     * Handles coolant logo and flashing effects when coolant temp hits certain target temps
      *
-     * @param temperature
      */
     private void updateCoolantTemperature(int temperature) {
-        // Implement the logic to update coolant temperature gauge and UI based on temperature
-        // This will replace the updateGaugeColor method from Settings class
-        // You can adapt the logic from updateGaugeColor to this method
-
         if (temperature > 104) {
-            coolantTemperatureGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge_high));
+            coolantTemperatureGauge.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.horizontal_gauge_high, null));
 
-            // Start the flashing effect if it's not already running
             if (!isFlashing && !hasFlashed) {
                 startFlashingEffect();
                 hasFlashed = true;
@@ -489,18 +447,16 @@ public class DigitalDash extends AppCompatActivity {
             coolantLogoSimple.setImageResource(R.drawable.coolant_logo_red);
             coolantTempTextSimple.setTextColor(Color.parseColor("#ff0000"));
         } else if (temperature > 96) {
-            coolantTemperatureGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge_medium));
+            coolantTemperatureGauge.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.horizontal_gauge_medium, null));
 
-            // Stop the flashing effect if it's running
             stopFlashingEffect();
 
             coolantTempTextSimple.setTextColor(Color.parseColor("#ffe222"));
             coolantLogoSimple.setImageResource(R.drawable.coolant_logo_yellow);
             hasFlashed = false;
         } else {
-            coolantTemperatureGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
+            coolantTemperatureGauge.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.horizontal_gauge, null));
 
-            // Stop the flashing effect if it's running
             stopFlashingEffect();
 
             coolantTempTextSimple.setTextColor(Color.parseColor("#FFFFFF"));
@@ -509,25 +465,21 @@ public class DigitalDash extends AppCompatActivity {
         }
 
         coolantTemperatureGauge.setProgress(temperature);
-        coolantTemperatureTextOverlay.setText(String.valueOf(temperature) + " °C");
+        String formattedTemperature = getString(R.string.temperature_format, temperature);
+        coolantTemperatureTextOverlay.setText(formattedTemperature);
     }
 
-//    private void updateAfr(int temperature) {
-//        afrGauge.setProgress(temperature);
-//        afrTextOverlay.setText(String.valueOf(temperature));
-//        afrGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
+//    /**
+//     * Updates fuel trim value
+//     *
+//     * @param temperature
+//     */
+//    private void updateFuelTrim(int temperature) {
+//        fuelTrimGauge.setProgress(temperature);
+//        String formattedTemperature = getString(R.string.temperature_format, temperature);
+//        fuelTrimTextOverlay.setText(formattedTemperature);
+//        fuelTrimGauge.setProgressDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.horizontal_gauge, null));
 //    }
-
-    /**
-     * Updates fuel trim value
-     *
-     * @param temperature
-     */
-    private void updateFuelTrim(int temperature) {
-        fuelTrimGauge.setProgress(temperature);
-        fuelTrimTextOverlay.setText(String.valueOf(temperature));
-        fuelTrimGauge.setProgressDrawable(getResources().getDrawable(R.drawable.horizontal_gauge));
-    }
 
 
     /**
@@ -550,7 +502,7 @@ public class DigitalDash extends AppCompatActivity {
     /**
      * This method is used to create the actual flashing of the coolant variable
      */
-    private Runnable flashingRunnable = new Runnable() {
+    private final Runnable flashingRunnable = new Runnable() {
         @Override
         public void run() {
             if (flashCount < 8) { // 8 times to flash (4 times on, 4 times off)
@@ -567,7 +519,6 @@ public class DigitalDash extends AppCompatActivity {
             }
         }
     };
-
 
     /**
      * Class that will make calls to the obd2 scanner based off of the selected gauges in the UI
@@ -626,9 +577,8 @@ public class DigitalDash extends AppCompatActivity {
     }
 
     /**
-     * This method process the results from the obd2CommandsToCall method and interprets them to update values of the gauges
+     * This method processes the results from the obd2CommandsToCall method and interprets them to update values of the gauges
      *
-     * @param results
      */
     private void processResults(List<String> results) {
         // Process the results and update UI
@@ -648,20 +598,18 @@ public class DigitalDash extends AppCompatActivity {
         }
 
         // Example: Update the fuel trim gauge
-        String fuelTrimResult = extractNumericPart(results.get(2));
-        if (fuelTrimResult != null) {
-            int fuelTrimResultVal = Integer.parseInt(fuelTrimResult);
-            updateFuelTrim(fuelTrimResultVal);
+//        String fuelTrimResult = extractNumericPart(results.get(2));
+//        if (fuelTrimResult != null) {
+//            int fuelTrimResultVal = Integer.parseInt(fuelTrimResult);
+//            updateFuelTrim(fuelTrimResultVal);
         }
 
         // ... Process other OBD2 commands here ...
-    }
+//    }
 
     /**
-     * extracts only the numeric parts of our obd2 commands
+     * Extracts only the numeric parts of our obd2 commands
      *
-     * @param result
-     * @return
      */
     private String extractNumericPart(String result) {
         // Extract numeric part from the result (remove non-numeric characters)
@@ -685,18 +633,18 @@ public class DigitalDash extends AppCompatActivity {
         }
     }
 
-    /**
-     * Request Bluetooth permissions for scanning
-     */
-    @RequiresApi(api = Build.VERSION_CODES.S)
-    private void requestPermissionsBlueToothScan(String[] strings, int i) {
-        if (getApplicationContext().checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            // Access granted
-            Log.d("Permissions", "Permission Already granted");
-        } else {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, 1);
-        }
-    }
+//    /**
+//     * Request Bluetooth permissions for scanning
+//     */
+//    @RequiresApi(api = Build.VERSION_CODES.S)
+//    private void requestPermissionsBlueToothScan(String[] strings, int i) {
+//        if (getApplicationContext().checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+//            // Access granted
+//            Log.d("Permissions", "Permission Already granted");
+//        } else {
+//            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_SCAN}, 1);
+//        }
+//    }
 
     /**
      * Request Bluetooth permissions for connection
@@ -708,6 +656,57 @@ public class DigitalDash extends AppCompatActivity {
             Log.d("Permissions", "Permission Already granted");
         } else {
             requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 1);
+        }
+    }
+
+    private void showNoBluetoothDeviceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Create a LinearLayout for the dialog
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(15, 10, 15, 10);
+        layout.setBackgroundColor(Color.GRAY);
+        layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
+
+        // Create a TextView for the title
+        TextView title = new TextView(this);
+        title.setText(getString(R.string.no_bluetooth_title));
+        title.setTextSize(26); // Set text size to 26sp
+        title.setTextColor(Color.BLACK);
+        title.setPadding(10, 10, 10, 5);
+        layout.addView(title);
+
+        // Create a TextView for the message
+        TextView message = new TextView(this);
+        message.setText(getString(R.string.no_bluetooth_message));
+        message.setTextSize(20); // Set text size to 20sp
+        message.setTextColor(Color.BLACK);
+        message.setPadding(10, 5, 10, 10);
+        layout.addView(message);
+
+        builder.setView(layout);
+
+        // Set the positive button
+        builder.setPositiveButton(getString(R.string.ok_button), (dialog, which) -> finish());
+
+        AlertDialog dialog = builder.create();
+
+        // Set the background color to grey
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.GRAY));
+        }
+
+        dialog.show();
+
+        // Access and customize the positive button after the dialog is shown
+        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        if (positiveButton != null) {
+            positiveButton.setTextSize(20); // Increase the text size
+            positiveButton.setPadding(0, 10, 0, 10); // Increase the padding
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+            params.width = LayoutParams.MATCH_PARENT; // Make the button width match the parent
+            positiveButton.setLayoutParams(params);
         }
     }
 }

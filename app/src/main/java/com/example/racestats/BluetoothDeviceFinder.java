@@ -3,6 +3,7 @@ package com.example.racestats;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.BluetoothLeScanner;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -46,8 +47,10 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
 
                 if (ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     requestPermissions();
+                    return;
                 }
 
+                assert device != null;
                 String deviceName = device.getName();
                 String deviceAddress = device.getAddress();
                 String deviceInfo = deviceName + "\n" + deviceAddress;
@@ -72,8 +75,7 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
 
         // Hide the navigation bar (optional)
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         requestPermissions();
@@ -88,7 +90,7 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
             Log.d("autoconnect", "Attempting to auto connect");
             connectToBluetoothDevice(savedDeviceAddress);
         } else {
-            Log.d("manuel connection", "manuel connection needed");
+            Log.d("manual connection", "manual connection needed");
             // Proceed with regular Bluetooth device discovery
             startBluetoothDiscovery();
         }
@@ -107,17 +109,22 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
         });
 
         Button testButton = findViewById(R.id.testButton);
-        testButton.setOnClickListener( view -> {
+        testButton.setOnClickListener(view -> {
             Intent intent = new Intent(BluetoothDeviceFinder.this, DigitalDash.class);
             startActivity(intent);
         });
-
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
             Log.d("bluetooth error", "Device Does Not Support Bluetooth");
-            // TODO need to add text view for the users to see letting them know that Bluetooth is not supported on there device
+            // TODO: Add text view for users to see letting them know that Bluetooth is not supported on their device
+            return;
+        }
+
+        BluetoothLeScanner bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        if (bluetoothLeScanner == null) {
+            Log.d("bluetooth error", "BluetoothLeScanner is null");
             return;
         }
 
@@ -128,6 +135,7 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Error in permission check here", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -140,36 +148,15 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
         }
         devicesArrayAdapter.notifyDataSetChanged();
 
-
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(bluetoothReceiver, filter);
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissionsBlueToothScan(new String[]{Manifest.permission.BLUETOOTH_SCAN}, 1);
+            requestPermissionsBlueToothScan();
+            return;
         }
 
-
         bluetoothAdapter.startDiscovery();
-
-
-        /**
-         * Will redirect user to the Digital Dash Board View
-         */
-        devicesListView.setOnItemClickListener((parent, view, position, id) -> {
-            String deviceInfo = devicesArrayAdapter.getItem(position);
-            String[] deviceInfoArray = deviceInfo.split("\n");
-            String deviceAddress = deviceInfoArray[1];
-
-            // Save the selected device address in SharedPreferences for auto-connection
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("lastDeviceAddress", deviceAddress);
-            editor.apply();
-
-            Intent intent = new Intent(BluetoothDeviceFinder.this, DigitalDash.class);
-            intent.putExtra("deviceAddress", deviceAddress); // Pass the device address to DigitalDash activity
-            startActivity(intent);
-        });
     }
 
     /**
@@ -187,13 +174,10 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-
     /**
-     * @param strings
-     * @param i
+     * Request Bluetooth scan permissions
      */
-    private void requestPermissionsBlueToothScan(String[] strings, int i) {
+    private void requestPermissionsBlueToothScan() {
         if (getApplicationContext().checkSelfPermission(Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
             // Access granted
             Log.d("Permissions", "Permission Already granted");
@@ -203,7 +187,7 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
     }
 
     /**
-     *
+     * Request Bluetooth connect permission
      */
     private void requestPermissions() {
         if (getApplicationContext().checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
@@ -215,9 +199,7 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
     }
 
     /**
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * Handle permission result
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -233,9 +215,8 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
         }
     }
 
-
     /**
-     * In charge of destroying the bluetooth connection between the device and the OBD2 scanner
+     * In charge of destroying the Bluetooth connection between the device and the OBD2 scanner
      */
     @Override
     protected void onDestroy() {
@@ -258,13 +239,13 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
     private void startBluetoothDiscovery() {
         if (bluetoothAdapter == null) {
             Log.d("Error", "BluetoothAdapter is null. Unable to start discovery.");
-            // need to add error handling here
+            // Need to add error handling here
             return;
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Error Permissions", "BLUETOOTH_SCAN permission not granted");
-            // also need to add error handling here
+            // Need to add error handling here
             return;
         }
 
@@ -272,7 +253,6 @@ public class BluetoothDeviceFinder extends AppCompatActivity {
             bluetoothAdapter.startDiscovery();
         }
     }
-
 
     public static class BootReceiver extends BroadcastReceiver {
         @Override
