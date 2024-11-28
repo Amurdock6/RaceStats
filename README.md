@@ -1,4 +1,4 @@
-<h1>RaceStats</h1> 
+<h1>Android Race Dash</h1> 
 
 <p>Welcome to RaceStats, a comprehensive digital dash android app targeted towards car enthusiasts and track days. Primarly desinged to run on Raspberry pi 4 model b 8gb. This project aims to collect helpful data points such as: Coolant temps, Oil temps, Boost PSI, RPM, ect.. on top of those features there is a built-in lap timer using GPS, a Geforce Meter which uses your accelerometer and other cool features.
 What sets this app apart from others on the market? It's open source and focuses heavily on user customization.</p>
